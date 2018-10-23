@@ -6,4 +6,4 @@ ToDo:
 2. Generator instancji
 
 WooDone:
-1. Wczytywanie instancji z pliku
+1. Wczytywanie instancji z pliku (w każdym wierszu jest każde połączenie wierzchołka o tym indeksie [indeksowanie od 1] )
