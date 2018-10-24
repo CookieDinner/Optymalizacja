@@ -41,7 +41,7 @@ void BruteForce(int **t, int *ord, int s) {
 		cout << t[i][i] << " ";
 	}
 	cout << endl;
-
+	delete [] colors;
 }
 int main()
 {
@@ -80,9 +80,12 @@ int main()
 			order[i] = i + 1;
 
 		BruteForce(tab, order, V);					//Where the magic happens...
+		
+		for (int i = 0; i < size; i++)
+			delete [] tab[i];
+		delete [] tab;
+    		delete [] order;
 	}
-	
-	
-
+		
     return 0;
 }
