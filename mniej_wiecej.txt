@@ -1,0 +1,29 @@
+1. Zach³anny z ka¿dego wierzcho³ka -> pocz¹tkowa populacja chromosomów (n) + dodatkowo dope³nienie do liczby M ca³ej populacji.
+
+2. Te dodatkowe dope³nienia czyœcimy (¿eby kolorowanie siê zgadza³o).
+...
+
+Potrzebne funkcje:
+- fitness() - [nadawanie oceny ka¿demu chromosomowi - liczba kolorów] - [wpisuje do tablicy ocen <n-1> ]
+
+- chooseparents() - [wybiera dwóch parent'ów do crossingu na podstawie czegoœ tam] - [jedna lub dwie funkcje tego typu] - [zwraca tych parentów do funkcji poni¿szej]
+
+- crossover() - [losuje w chromosomach parent'ów (taki sam w obu) punkt crossingu i wrzuca do child'a, do tego punktu, z 1. parenta i, od tego punktu, z 2. parenta] - [Zawiera parametr prawdopodobieœtwa wyst¹pienia CROSS_CHANCE = 50% populacji].
+
+PS. W przypadku gdy istniej¹ nowo wylosowane chromosomy, które s¹ pokolorowane niepoprawnie - naprawiamy je (albo kolejno po stworzeniu albo na koñcu po stworzeniu wszystkich nowych).
+
+PS2. Zabijamy CROSS_CHANCE najgorszych chromosomów
+
+- mutation() - [mutuje wybrany chromosom z prawdobodobieñstwem wyst¹pienia MUTATION_CHANCE = np. 5%]
+
+3. Wykonanie powy¿szych funkcji dla danej populacji i zast¹pienie najgorszych chromosomów nowymi chromosomami.
+
+4. Powtarzanie puktu 3. do momentu braku lepszego wyniku w np. 5-10 (lub wiêcej) ostatnich wykonañ albo jakiejœ tam liczby wykonañ do tego momentu. STOP_MOMENT
+
+5. Wybranie najlepszego chromosomu z obecnej populacji - Wynik (liczba kolorów).
+
+Define'y:
+- POPULATION
+- CROSS_CHANCE
+- MUTATION_CHANCE
+- STOP_MOMENT
