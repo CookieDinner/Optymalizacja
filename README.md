@@ -1,4 +1,4 @@
-# Optymalizacja Kombinatoryczna
+# Kolorowanie grafu - GA
 
 1. Zachłanny z każdego wierzchołka -> początkowa populacja chromosomów (n) + dodatkowo dopełnienie do liczby M całej populacji.
 
