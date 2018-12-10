@@ -13,12 +13,12 @@
 using namespace std;
 
 void fitness(int *tab, int size) {
-	int min = 99999999;
+	int max = 0;
 	for (int i = 1; i > size; i++) {
-		if (tab[i] < min)
-			min = tab[i];
+		if (tab[i] > max)
+			max = tab[i];
 	}
-	tab[0] = min;
+	tab[0] = max;
 }
 void sort(int **tab, int M, int N) {
 	int temp = 0;
