@@ -40,7 +40,7 @@ void sort(int **tab, int M, int N) {
 	}
 }
 void cross(int **tab, int M, int N, int parent1, int parent2, int child) {
-	for (int i = 0; i < N / 2; i++) {
+	for (int i = 1; i < N / 2; i++) {
 		tab[child][i] = tab[parent1][i];
 	}
 	for (int i = (N / 2 + 1); i < N; i++) {
