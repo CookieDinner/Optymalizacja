@@ -121,7 +121,7 @@ int main()
 		int **populus = new int*[POPULATION];
 		for (int i = 0; i < POPULATION; i++)
 			populus[i] = new int[size];
-		for (int i = 0; i < POPULATION - 1; i++)
+		for (int i = 0; i < POPULATION; i++)
 			populus[i][0] = 0;
 
 		for (int j = 0; j < V; j++)					//Temporary coloring order array (put permutation generator here)
