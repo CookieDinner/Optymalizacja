@@ -7,15 +7,18 @@
 #include "time.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "algorithm"
 
-#define POPULATION     100  //M
+#define POPULATION 100  //M
 #define CROSS_CHANCE 50
-#define MUTATION_CHANCE 0
-#define STOP_MOMENT 100
+#define MUTATION_CHANCE 10
+#define STOP_MOMENT 600
 #define GEN_DIVIDER 3
 #define GREED_NUM 10
+#define CUT_PERCENT 30 //procent pocz¹tkowych wierzcho³ków które przesuwamy o NUMBER_MOVES w mutation1()
+#define NUMBER_MOVES 2 //iloœæ przesuniêæ w mutacji 1
 
-#define NAZWA_PLIKU "gc_1000_300013.txt"
+#define NAZWA_PLIKU "queen6.txt"
 
 using namespace std;
 
@@ -217,8 +220,31 @@ void Greedy(int **tab, int *order, int s, int *current) {
 
 	delete[] colors;
 }
+void mutation1(int *chromosom, int wielkoscChromosomu){
 
+	double percent = (double)CUT_PERCENT;
+	int ilePrzesuwamy = wielkoscChromosomu * (percent / 100); //oblicza iloœæ wierzcho³ków do przesuniêcia
+	int *temp = new int[NUMBER_MOVES];
+	for (int i = (ilePrzesuwamy + 1); i <= (ilePrzesuwamy + NUMBER_MOVES); i++)
+	{
+		temp[i - ilePrzesuwamy - 1] = chromosom[i]; //zapisuje tymczasowo te dane z chromosomu które zostan¹ przeniesione na pocz¹tek
+	}
+	for (int i = (ilePrzesuwamy + NUMBER_MOVES); i >= (1 + NUMBER_MOVES); i--)
+	{
+		chromosom[i] = chromosom[i - NUMBER_MOVES]; //przesuwamy elmenty w prawo
+	}
+	for (int i = 1; i <= NUMBER_MOVES; i++)
+	{
+		chromosom[i] = temp[i-1]; //na sam pocz¹tek przesuwamy te chromosowmy które tymczasowo zosta³y nadpisane w 1 pêtli
+	}
 
+	delete[] temp;
+}
+void mutation2(int *chromosom, int wielkoscChromosomu) {
+
+	for (int i = 1; i < wielkoscChromosomu; i += 2)
+		swap(chromosom[i], chromosom[i + 1]);
+}
 
 int main()
 {
@@ -265,15 +291,24 @@ int main()
 
 		//delete[] graf.tab;
 		//}
-
+		double mutc = (double)MUTATION_CHANCE / 100;
+		double popu = (double)POPULATION;
 		addRandomChromosomes(graf.tab, populus, POPULATION, GREED_NUM, graf.V);
-
 		fitness(populus, graf.V);
 		sort(populus, POPULATION, graf.V);
 		for (int i = 0; i < STOP_MOMENT; i++) {
+			for (int i = 1; i < popu * mutc; i++) {
+				if (i%2 == 0)
+					mutation1(populus[i], graf.V);
+				else
+					mutation2(populus[i], graf.V);
+				clean(graf.tab, populus[i], graf.V);
+			}
 			for (int i = 0; i < (POPULATION / 2); i += 2) {
 				cross(populus, graf.V, i, i + 1, ((POPULATION - 1) - (i / 2)));
 				clean(graf.tab, populus[((POPULATION - 1) - (i / 2))], graf.V);
+				cross(populus, graf.V, i + 1, i, ((POPULATION / 2 - 1) + (i / 2)));	
+				clean(graf.tab, populus[((POPULATION / 2 - 1) + (i / 2))], graf.V);
 			}
 			fitness(populus, graf.V);
 			sort(populus, POPULATION, graf.V);
@@ -282,8 +317,8 @@ int main()
 
 		for (int i = 0; i < POPULATION; i++) {
 			cout << populus[i][0] << ". ";
-			//for (int j = 1; j <= graf.V; j++)
-				//cout << populus[i][j] << " ";
+			for (int j = 1; j <= graf.V; j++)
+				cout << populus[i][j] << " ";
 			cout << endl;
 		}
 
