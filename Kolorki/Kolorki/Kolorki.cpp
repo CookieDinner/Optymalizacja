@@ -8,17 +8,18 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "algorithm"
+#include "conio.h"
 
-#define POPULATION 100  //M
-#define CROSS_CHANCE 50
-#define MUTATION_CHANCE 10
-#define STOP_MOMENT 600
+#define POPULATION 100 //M
+#define CROSS_CHANCE 30
+#define MUTATION_CHANCE 70
+#define STOP_MOMENT 100000
 #define GEN_DIVIDER 3
-#define GREED_NUM 10
-#define CUT_PERCENT 30 //procent pocz¹tkowych wierzcho³ków które przesuwamy o NUMBER_MOVES w mutation1()
-#define NUMBER_MOVES 2 //iloœæ przesuniêæ w mutacji 1
+#define GREED_NUM 0
+#define CUT_PERCENT 100 //procent pocz¹tkowych wierzcho³ków które przesuwamy o NUMBER_MOVES w mutation1()
+#define NUMBER_MOVES 5 //iloœæ przesuniêæ w mutacji 1
 
-#define NAZWA_PLIKU "queen6.txt"
+#define NAZWA_PLIKU "le450_5a.txt"
 
 using namespace std;
 
@@ -130,12 +131,13 @@ void sort(int **tab, int M, int N)
 }
 void cross(int **tab, int N, int parent1, int parent2, int child)
 {
-	for (int i = 1; i < (N / 2); i++)
+	int point = (rand() % N - 10) + 5;
+	for (int i = 1; i < point; i++)
 	{
 		tab[child][i] = tab[parent1][i];
 	}
 
-	for (int i = (N / 2); i <= N; i++)
+	for (int i = point; i <= N; i++)
 	{
 		tab[child][i] = tab[parent2][i];
 	}
@@ -249,8 +251,9 @@ void mutation2(int *chromosom, int wielkoscChromosomu) {
 int main()
 {
 	srand(unsigned(time(NULL)));
+	ofstream output;
 	ifstream file;
-
+	output.open("wyniki.txt", ios::trunc);
 	file.open(NAZWA_PLIKU);						//Opening the file
 
 	if (file.is_open())
@@ -293,6 +296,7 @@ int main()
 		//}
 		double mutc = (double)MUTATION_CHANCE / 100;
 		double popu = (double)POPULATION;
+		double crossc = (double)CROSS_CHANCE /100;
 		addRandomChromosomes(graf.tab, populus, POPULATION, GREED_NUM, graf.V);
 		fitness(populus, graf.V);
 		sort(populus, POPULATION, graf.V);
@@ -302,31 +306,39 @@ int main()
 					mutation1(populus[i], graf.V);
 				else
 					mutation2(populus[i], graf.V);
+				//clean(graf.tab, populus[i], graf.V);
+			}
+			for (int i = 0; i < (POPULATION * crossc); i += 1) {
+				cross(populus, graf.V, 0, i + 1, ((POPULATION - 1) - i ));
+				//clean(graf.tab, populus[((POPULATION - 1) - (i / 2))], graf.V);
+				cross(populus, graf.V, i + 1, 0, (((POPULATION / 2) - 1) + i));	
+				//clean(graf.tab, populus[(((POPULATION / 2) - 1) + (i / 2))], graf.V);
+			}
+			for (int i = 0; i < POPULATION; i++)
 				clean(graf.tab, populus[i], graf.V);
-			}
-			for (int i = 0; i < (POPULATION / 2); i += 2) {
-				cross(populus, graf.V, i, i + 1, ((POPULATION - 1) - (i / 2)));
-				clean(graf.tab, populus[((POPULATION - 1) - (i / 2))], graf.V);
-				cross(populus, graf.V, i + 1, i, ((POPULATION / 2 - 1) + (i / 2)));	
-				clean(graf.tab, populus[((POPULATION / 2 - 1) + (i / 2))], graf.V);
-			}
 			fitness(populus, graf.V);
 			sort(populus, POPULATION, graf.V);
-			cout << "I = " << i << endl;
+			cout << "I = " << i << ", wynik - " << populus[0][0] << endl;
+			output << populus[0][0] << endl;
 		}
-
-		for (int i = 0; i < POPULATION; i++) {
-			cout << populus[i][0] << ". ";
-			for (int j = 1; j <= graf.V; j++)
-				cout << populus[i][j] << " ";
-			cout << endl;
-		}
+		
+		//for (int i = 0; i < POPULATION; i++) {
+			//clean(graf.tab, populus[i], graf.V);
+			//cout << populus[i][0] << ". ";
+		//	for (int j = 1; j <= graf.V; j++)
+			//	cout << populus[i][j] << " ";
+		//	cout << endl;
+		//}
+		//fitness(populus, graf.V);
+		//sort(populus, POPULATION, graf.V);
+		cout << "Ostatecznie - " << populus[0][0] << endl;
 
 
 		delete[] order;
 	}
 
 	file.close();
-
+	output.close();
+	_getch();
 	return 0;
 }
